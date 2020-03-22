@@ -1,6 +1,7 @@
 #Custom
 *.txt
 *.dat
+.ipynb_checkpoints
 
 # Prerequisites
 *.d
