@@ -1,4 +1,4 @@
-#include "Lattice.h"
+#include "LatticeGas.h"
 #include <map>
 #include <fstream>
 #include <string>
@@ -22,9 +22,10 @@ int main(int argc, char const *argv[]) {
     }
   }
 
-  Lattice L(T,J);
+  unsigned seed = 0;
+  LatticeGas lg(T,J,seed);
 
-  std::ofstream infofile("info.txt");
+  std::ofstream infofile("output/info.txt");
   infofile << "NMCS: " << NMCS << std::endl;
   infofile << "J/kB*T: " << J << std::endl;
   infofile.close();
@@ -33,14 +34,13 @@ int main(int argc, char const *argv[]) {
   std::vector<std::string> filenames {"energy", "order_parameter"};
 
   for (const auto &name: filenames){
-    outfiles[name] = std::make_unique<std::ofstream>((name+".txt").c_str());
+    outfiles[name] = std::make_unique<std::ofstream>(("output/"+name+".txt").c_str());
   }
 
-  L.setRandomSeed(time(NULL));
-  L.random_init(0.5);
+  lg.random_init(0.5);
 
-  std::ofstream initial_config("initial_config.txt");
-  initial_config << L << std::endl;
+  std::ofstream initial_config("output/initial_config.txt");
+  initial_config << lg << std::endl;
   initial_config.close();
 
   int Nsamples = 1000;
@@ -49,17 +49,17 @@ int main(int argc, char const *argv[]) {
   for (size_t i = 0; i < NMCS; i++) {
     if (i%M==0){
       for (auto it=outfiles.begin(); it!=outfiles.end(); it++){
-        L.PrintData(it->first, *(it->second));
+        lg.PrintData(it->first, *(it->second));
       }
     }
-    L.MetropolisHastingsStep();
+    lg.MetropolisHastingsStep();
   }
 
-  std::cout << L.compute_OrderParameter() << std::endl;
-  std::cout << L.compute_TotalEnergy() << std::endl;
+  std::cout << lg.compute_OrderParameter() << std::endl;
+  std::cout << lg.compute_TotalEnergy() << std::endl;
 
-  std::ofstream final_config("final_config.txt");
-  final_config << L << std::endl;
+  std::ofstream final_config("output/final_config.txt");
+  final_config << lg << std::endl;
   final_config.close();
 
   return 0;

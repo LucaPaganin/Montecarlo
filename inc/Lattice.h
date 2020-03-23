@@ -9,36 +9,28 @@
 
 class Lattice{
 public:
-  Lattice(): R(NULL),T(0),J(1),engine(0){};
-  Lattice(int dim, double coupling){
+  Lattice(): R(NULL),T(0),engine(0){};
+  Lattice(int dim, unsigned seed){
     T = dim;
-    J = coupling;
     R = new int*[T];
     for (size_t i = 0; i < T; i++) R[i] = new int[T];
-    engine.seed(0);
+    engine.seed(seed);
   }
   void zero_init();
-  void setRandomSeed(int seed){engine.seed(seed);}
   void random_init(double);
 
-  const int Size() const{return T;}
-  int** lattice() const {return R;}
+  const int Size() const {return T;}
+  int** lattice() const  {return R;}
 
   unsigned* get_NeighborCoordinates(int,int,int) const;
   int get_NeighborsNumber(int,int) const;
-  double compute_OrderParameter() const;
-  double compute_TotalEnergy() const;
-
-  void MetropolisHastingsStep();
-  void PrintData(const std::string&, std::ostream&) const;
 
   friend std::ostream& operator<<(std::ostream&, const Lattice&);
   friend std::istream& operator>>(std::istream&, Lattice&);
 
-private:
+protected:
   int **R;
   int T;
-  double J;
   std::mt19937 engine;
 };
 
