@@ -34,7 +34,6 @@ double LatticeGas::compute_OrderParameter() const {
 }
 
 void LatticeGas::MetropolisHastingsStep(){
-  std::uniform_real_distribution<double> distr(0,1);
   int i = distr(engine)*T;
   int j = distr(engine)*T;
   while (R[i][j]==0) {

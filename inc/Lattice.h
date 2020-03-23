@@ -1,7 +1,6 @@
 #ifndef LATTICE_H
 #define LATTICE_H
 
-#include <vector>
 #include <random>
 #include <chrono>
 #include <cmath>
@@ -9,7 +8,7 @@
 
 class Lattice{
 public:
-  Lattice(): R(NULL),T(0),engine(0){};
+  Lattice(): R(NULL),T(0),engine(0),distr(0,1){};
   Lattice(int dim, unsigned seed){
     T = dim;
     R = new int*[T];
@@ -32,6 +31,7 @@ protected:
   int **R;
   int T;
   std::mt19937 engine;
+  std::uniform_real_distribution<double> distr;
 };
 
 

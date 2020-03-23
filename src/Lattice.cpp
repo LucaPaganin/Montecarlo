@@ -10,7 +10,6 @@ void Lattice::zero_init(){
 
 void Lattice::random_init(double fill_fraction){
   this->zero_init();
-  std::uniform_real_distribution<double> distr(0,1);
   if (fill_fraction<0 || fill_fraction>1){
     std::cout << "Invalid filling fraction" << std::endl;
   }
