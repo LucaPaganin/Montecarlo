@@ -11,11 +11,19 @@ void PrintVector(const std::vector<int>& v, std::ostream& os){
 }
 
 int main(int argc, char const *argv[]) {
-  int size = 4;
-  GrowingLattice gl(size,0);
-
+  GrowingLattice gl;
+  std::ifstream file("input/input.cfg");
+  gl.loadFromFile(file);
+  file.close();
+  
   gl.GrowLattice();
-  std::cout << gl << std::endl;
 
+  std::map<std::string, std::ofstream*> outfiles;
+  std::array<std::string,2> filenames{"final_config","neighbor_classes"};
+  for (const auto& n: filenames) {
+    outfiles[n] = new std::ofstream(("output2/"+n+".txt").c_str());
+  }
+  *outfiles["final_config"] << gl << std::endl;
+  gl.PrintNeighborClasses(*outfiles["neighbor_classes"]);
   return 0;
 }

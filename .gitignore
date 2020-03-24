@@ -2,6 +2,7 @@
 *.txt
 *.dat
 .ipynb_checkpoints
+main
 
 # Prerequisites
 *.d

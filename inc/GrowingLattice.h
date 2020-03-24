@@ -10,12 +10,14 @@
 
 class GrowingLattice: public Lattice{
 public:
-  GrowingLattice(): Lattice(),flux(1./60),T(200.0),thetalim(0.1) {;}
+  GrowingLattice(): Lattice(),flux(1./60),T(100.0),thetalim(0.1) {;}
   GrowingLattice(int dim, unsigned seed): Lattice(dim,seed),flux(1./60),T(200.0),thetalim(0.1) {;}
 
   const std::vector<std::array <int,2>>& get_Particles() const {return particles;}
   const std::array<std::vector<int>,5>& get_NeighborClasses() const {return neighbor_classes;}
   const int get_NumParticles() const{return particles.size();}
+  void setSeed(unsigned seed){engine.seed(seed);}
+  void loadFromFile(std::ifstream&);
 
   void PrintNeighborClasses(std::ostream&) const;
   void PrintParticles() const;
@@ -23,8 +25,10 @@ public:
 
   void InitializeClasses();
   void ComputeWeights();
+  unsigned get_RandomClassIndex();
   void DepositParticle();
   void MoveParticle(int,int);
+  void MoveRandomParticleofClass(unsigned);
   void GrowLattice();
 
 protected:
