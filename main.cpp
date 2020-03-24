@@ -11,15 +11,10 @@ void PrintVector(const std::vector<int>& v, std::ostream& os){
 }
 
 int main(int argc, char const *argv[]) {
-  int T = 10;
-  GrowingLattice gl(T,0);
+  int size = 4;
+  GrowingLattice gl(size,0);
 
-  for (size_t i = 0; i < 50; i++) {
-    gl.DepositParticle();
-  }
-
-  gl.InitializeClasses();
-
+  gl.GrowLattice();
   std::cout << gl << std::endl;
 
   return 0;

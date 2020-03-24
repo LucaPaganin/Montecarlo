@@ -5,31 +5,37 @@
 #include <chrono>
 #include <cmath>
 #include <iostream>
+#include <array>
+#include <vector>
+#include <algorithm>
 
 class Lattice{
 public:
-  Lattice(): R(NULL),T(0),engine(0),distr(0,1){};
-  Lattice(int dim, unsigned seed){
-    T = dim;
-    R = new int*[T];
-    for (size_t i = 0; i < T; i++) R[i] = new int[T];
+  Lattice(): R(NULL),dim(0),engine(0),distr(0,1){};
+  Lattice(int dimension, unsigned seed){
+    dim = dimension;
+    R = new int*[dim];
+    for (size_t i = 0; i < dim; i++) R[i] = new int[dim];
     engine.seed(seed);
   }
   void zero_init();
   void random_init(double);
 
-  const int Size() const {return T;}
+  const int Size() const {return dim;}
   int** lattice() const  {return R;}
 
-  unsigned* get_NeighborCoordinates(int,int,int) const;
+  int* get_NeighborCoordinates(int,int,int) const;
   int get_NeighborsNumber(int,int) const;
+  int get_OppositeDirection(int dir) const;
+  std::vector<int> get_NearestNeighbors(int,int) const;
+  bool IsThere_aNeighbor(int,int,int) const;
 
   friend std::ostream& operator<<(std::ostream&, const Lattice&);
   friend std::istream& operator>>(std::istream&, Lattice&);
 
 protected:
   int **R;
-  int T;
+  int dim;
   std::mt19937 engine;
   std::uniform_real_distribution<double> distr;
 };
