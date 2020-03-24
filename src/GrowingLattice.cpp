@@ -109,41 +109,28 @@ unsigned GrowingLattice::get_RandomClassIndex() {
   for (q = 0; q < 5; q++) {
     if(w<=partial_weights_sums[q]) break;
   }
-  /*
-  for (int q=0; q<5; ++q){
-    std::cout << partial_weights_sums[q] << " ";
-  }
-  std::cout << std::endl;
-  */
   delete[] partial_weights_sums;
   return q;
 }
 
 void GrowingLattice::MoveRandomParticleofClass(unsigned q){
-  unsigned ip = distr(engine)*(neighbor_classes[q].size());
+  int ip = distr(engine)*(neighbor_classes[q].size()-1);
   auto p = neighbor_classes[q][ip];
   unsigned dir = std::floor(distr(engine)*4);
-  //std::cout << "Extracted particle to move: " << p << "; Direction of move: " << dir << std::endl;
   if (!this->IsThere_aNeighbor(particles[p][0], particles[p][1], dir)){
     this->MoveParticle(p, dir);
   }
 }
 
 void GrowingLattice::GrowLattice(){
-  //Deposit initial particles
   for (unsigned i=0; i<2; i++) this->DepositParticle();
-
   while(particles.size()<=thetalim*dim*dim){
     this->ComputeWeights();
     auto q = this->get_RandomClassIndex();
-    //this->PrintNeighborClasses(std::cout);
-    //std::for_each(weights.begin(), weights.end(), [](auto x){std::cout << x << " ";}); std::cout << std::endl;
     if (q==4) {
       this->DepositParticle();
     } else {
       this->MoveRandomParticleofClass(q);
     }
-    //this->InitializeClasses();
-    //std::cout << *this << std::endl;
   }
 }
