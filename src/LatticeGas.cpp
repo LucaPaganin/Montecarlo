@@ -47,14 +47,12 @@ void LatticeGas::MetropolisHastingsStep(){
     auto nf = this->get_NeighborsNumber(final_coords[0],final_coords[1]) - 1;
     double dE = J*(nf-ni);
     if (dE<0) {
-      R[final_coords[0]][final_coords[1]] = 1;
-      R[i][j] = 0;
+      std::swap(R[i][j],R[final_coords[0]][final_coords[1]]);
     }
     else{
       double w = distr(engine);
       if (w < std::exp(-dE)) {
-        R[final_coords[0]][final_coords[1]] = 1;
-        R[i][j] = 0;
+        std::swap(R[i][j],R[final_coords[0]][final_coords[1]]);
       }
     }
   }

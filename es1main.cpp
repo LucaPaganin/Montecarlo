@@ -7,8 +7,8 @@
 
 int main(int argc, char const *argv[]) {
   int T=64;
-  double J=1.8;
-  int NMCS=1000;
+  double J=2.5;
+  int NMCS=10000;
   if (argc>1) {
     switch (argc) {
       case 2:

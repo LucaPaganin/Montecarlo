@@ -20,7 +20,7 @@ TEST_TARGET = test
 $(TARGET): $(OBJDIR)/$(TARGET).o $(OBJS)
 	$(CC) $(CCFLAGS) -o $(TARGET) $^
 
-$(OBJDIR)/$(TARGET).o: main.cpp
+$(OBJDIR)/$(TARGET).o: $(TARGET).cpp
 	$(CC) $(CCFLAGS) -c -o $@ $<
 
 $(OBJDIR)/$(TEST_TARGET).o: test.cpp
