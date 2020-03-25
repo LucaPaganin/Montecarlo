@@ -15,8 +15,9 @@ int main(int argc, char const *argv[]) {
   std::ifstream file("input/input.cfg");
   gl.loadFromFile(file);
   file.close();
-  
-  gl.GrowLattice();
+
+  gl.DDAGrowth();
+  //gl.GrowLattice();
 
   std::map<std::string, std::ofstream*> outfiles;
   std::array<std::string,2> filenames{"final_config","neighbor_classes"};

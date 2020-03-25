@@ -30,6 +30,7 @@ public:
   void MoveParticle(int,int);
   void MoveRandomParticleofClass(unsigned);
   void GrowLattice();
+  void DDAGrowth();
 
 protected:
   std::vector<std::array <int,2>> particles;

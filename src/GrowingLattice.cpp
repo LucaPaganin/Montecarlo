@@ -116,13 +116,15 @@ unsigned GrowingLattice::get_RandomClassIndex() {
 void GrowingLattice::MoveRandomParticleofClass(unsigned q){
   int ip = distr(engine)*(neighbor_classes[q].size()-1);
   auto p = neighbor_classes[q][ip];
+  //std::cout << ip << " " << neighbor_classes[q].size() << std::endl;
   unsigned dir = std::floor(distr(engine)*4);
-  if (!this->IsThere_aNeighbor(particles[p][0], particles[p][1], dir)){
+  if (!this->IsThere_aNeighbor(particles[p-1][0], particles[p-1][1], dir)){
     this->MoveParticle(p, dir);
   }
 }
 
 void GrowingLattice::GrowLattice(){
+  this->zero_init();
   for (unsigned i=0; i<2; i++) this->DepositParticle();
   while(particles.size()<=thetalim*dim*dim){
     this->ComputeWeights();
@@ -131,6 +133,26 @@ void GrowingLattice::GrowLattice(){
       this->DepositParticle();
     } else {
       this->MoveRandomParticleofClass(q);
+    }
+  }
+}
+
+void GrowingLattice::DDAGrowth(){
+  this->zero_init();
+  for (unsigned i=0; i<2; i++) this->DepositParticle();
+  double Gamma = nu0*exp(-E0/(kB*T));
+  double *dda_weights = new double[2];
+  dda_weights[0] = 4*Gamma*neighbor_classes[0].size();
+  dda_weights[1] = dim*dim;
+
+  while (particles.size() <= dim*dim*thetalim) {
+    dda_weights[0] = 4*Gamma*neighbor_classes[0].size();
+    double PCprime = dda_weights[0]+dda_weights[1];
+    auto w = distr(engine)*PCprime;
+    if (w<=dda_weights[0]) {
+      this->MoveRandomParticleofClass(0);
+    } else {
+      this->DepositParticle();
     }
   }
 }
