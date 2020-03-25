@@ -12,6 +12,7 @@ public:
   double compute_TotalEnergy() const;
 
   void MetropolisHastingsStep();
+  void MonteCarloRealization(unsigned);
   void PrintData(const std::string&, std::ostream&) const;
 
 protected:

@@ -119,3 +119,15 @@ bool Lattice::IsThere_aNeighbor(int i, int j, int dir) const{
   }
   return neighbor;
 }
+
+void Lattice::PrintLatticeToFile(const std::string& filename) const{
+  std::ofstream* ofile = new std::ofstream(filename.c_str());
+  for (size_t i = 0; i < dim; i++) {
+    for (size_t j = 0; j < dim; j++) {
+      *ofile << R[i][j] << "\t";
+    }
+    *ofile << std::endl;
+  }
+  ofile->close();
+  delete ofile;
+}

@@ -2,11 +2,12 @@
 #define GROWINGLATTICE_H
 
 #include "Lattice.h"
-
+/*
 #define kB 8.61733238e-5
 #define nu0 1e12
 #define E0 0.4
 #define Eb 0.2
+*/
 
 class GrowingLattice: public Lattice{
 public:
@@ -17,7 +18,7 @@ public:
   const std::array<std::vector<int>,5>& get_NeighborClasses() const {return neighbor_classes;}
   const int get_NumParticles() const{return particles.size();}
   void setSeed(unsigned seed){engine.seed(seed);}
-  void loadFromFile(std::ifstream&);
+  void loadFromFile(const std::string&);
 
   void PrintNeighborClasses(std::ostream&) const;
   void PrintParticles() const;

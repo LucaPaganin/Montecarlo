@@ -34,6 +34,8 @@ public:
   friend std::ostream& operator<<(std::ostream&, const Lattice&);
   friend std::istream& operator>>(std::istream&, Lattice&);
 
+  void PrintLatticeToFile(const std::string&) const;
+
 protected:
   int **R;
   int dim;

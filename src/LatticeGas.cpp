@@ -58,6 +58,13 @@ void LatticeGas::MetropolisHastingsStep(){
   }
 }
 
+void LatticeGas::MonteCarloRealization(unsigned NMCS){
+  this->random_init(0.5);
+  for (unsigned k = 0; k < NMCS; k++) {
+    this->MetropolisHastingsStep();
+  }
+}
+
 void LatticeGas::PrintData(const std::string& kind, std::ostream& os) const{
   if (kind=="energy") {
     os << this->compute_TotalEnergy() << std::endl;

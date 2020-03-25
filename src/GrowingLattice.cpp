@@ -1,7 +1,10 @@
 #include "GrowingLattice.h"
+#include "Constants.h"
 
-void GrowingLattice::loadFromFile(std::ifstream& file){
+void GrowingLattice::loadFromFile(const std::string& filename){
+  std::ifstream file(filename.c_str());
   file >> dim >> T >> flux >> thetalim;
+  file.close();
   R = new int*[dim];
   for (size_t i = 0; i < dim; i++) R[i] = new int[dim];
 }
@@ -95,7 +98,7 @@ void GrowingLattice::ComputeWeights(){
   for (auto &w: weights) w=0;
 
   for (size_t q = 0; q < 3; q++) {
-    weights[q] = nu0*neighbor_classes[q].size()*(4-q)*exp(-(E0+q*Eb)/(kB*T));
+    weights[q] = Constants::nu0*neighbor_classes[q].size()*(4-q)*exp(-(Constants::E0+q*Constants::Eb)/(Constants::kB*T));
   }
   weights[4] = dim*dim*flux;
 }
@@ -140,7 +143,7 @@ void GrowingLattice::GrowLattice(){
 void GrowingLattice::DDAGrowth(){
   this->zero_init();
   for (unsigned i=0; i<2; i++) this->DepositParticle();
-  double Gamma = nu0*exp(-E0/(kB*T));
+  double Gamma = Constants::nu0*exp(-Constants::E0/(Constants::kB*T));
   double *dda_weights = new double[2];
   dda_weights[0] = 4*Gamma*neighbor_classes[0].size();
   dda_weights[1] = dim*dim;

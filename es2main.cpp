@@ -12,9 +12,7 @@ void PrintVector(const std::vector<int>& v, std::ostream& os){
 
 int main(int argc, char const *argv[]) {
   GrowingLattice gl;
-  std::ifstream file("input/input.cfg");
-  gl.loadFromFile(file);
-  file.close();
+  gl.loadFromFile("input/input.cfg");
 
   gl.DDAGrowth();
   //gl.GrowLattice();
@@ -24,7 +22,8 @@ int main(int argc, char const *argv[]) {
   for (const auto& n: filenames) {
     outfiles[n] = new std::ofstream(("output2/"+n+".txt").c_str());
   }
-  *outfiles["final_config"] << gl << std::endl;
+  
+  gl.PrintLatticeToFile("output2/final_config.txt");
   gl.PrintNeighborClasses(*outfiles["neighbor_classes"]);
   return 0;
 }
