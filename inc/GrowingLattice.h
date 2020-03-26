@@ -30,11 +30,12 @@ public:
   void InitializeClasses();
   void ComputeWeights();
   unsigned get_RandomClassIndex();
-  void DepositParticle();
+  void DepositParticle(int,int,bool);
   void MoveParticle(int,int);
   void MoveRandomParticleofClass(unsigned);
   void GrowLattice();
   void DDAGrowth();
+  void Fractal_Growth();
 
   void RemoveIsolatedParticles();
   void ExploreIsland();

@@ -9,13 +9,17 @@ void GrowingLattice::loadFromFile(const std::string& filename){
   for (size_t i = 0; i < dim; i++) R[i] = new int[dim];
 }
 
-void GrowingLattice::DepositParticle(){
-  int i = distr(engine)*dim;
-  int j = distr(engine)*dim;
-  while (R[i][j]!=0) {
-    i = distr(engine)*dim;
-    j = distr(engine)*dim;
+void GrowingLattice::DepositParticle(int x, int y, bool is_random){
+  int i=x,j=y;
+  if (is_random){
+    int i = distr(engine)*dim;
+    int j = distr(engine)*dim;
+    while (R[i][j]!=0) {
+      i = distr(engine)*dim;
+      j = distr(engine)*dim;
+    }
   }
+
   particles.push_back(std::array<int,2>{i,j});
   auto last_particle = particles.size();
   R[i][j] = last_particle;
@@ -128,12 +132,12 @@ void GrowingLattice::MoveRandomParticleofClass(unsigned q){
 
 void GrowingLattice::GrowLattice(){
   this->zero_init();
-  for (unsigned i=0; i<2; i++) this->DepositParticle();
+  for (unsigned i=0; i<2; i++) this->DepositParticle(0,0,true);
   while(particles.size()<=thetalim*dim*dim){
     this->ComputeWeights();
     auto q = this->get_RandomClassIndex();
     if (q==4) {
-      this->DepositParticle();
+      this->DepositParticle(0,0,true);
     } else {
       this->MoveRandomParticleofClass(q);
     }
@@ -142,7 +146,7 @@ void GrowingLattice::GrowLattice(){
 
 void GrowingLattice::DDAGrowth(){
   this->zero_init();
-  for (unsigned i=0; i<2; i++) this->DepositParticle();
+  for (unsigned i=0; i<2; i++) this->DepositParticle(0,0,true);
   double *dda_weights = new double[2];
   dda_weights[0] = 4*Gamma*neighbor_classes[0].size();
   dda_weights[1] = dim*dim;
@@ -154,7 +158,7 @@ void GrowingLattice::DDAGrowth(){
     if (w<=dda_weights[0]) {
       this->MoveRandomParticleofClass(0);
     } else {
-      this->DepositParticle();
+      this->DepositParticle(0,0,true);
     }
   }
 }
@@ -202,11 +206,6 @@ void GrowingLattice::ExploreIsland(){
   R[i][j]=-1;
   int d_islandsize=1;
   while (d_islandsize>0) {
-    /*
-    std::cout << "Isola: ";
-    std::for_each(island.begin(), island.end(), [](auto x){std::cout << x << " ";});
-    std::cout << std::endl;
-    */
     auto oldsize = island.size();
     for (unsigned k=0; k<oldsize; k++){
       auto p = island[k];
@@ -221,5 +220,27 @@ void GrowingLattice::ExploreIsland(){
     auto newsize = island.size();
     d_islandsize = newsize-oldsize;
   }
+}
 
+void GrowingLattice::Fractal_Growth(){
+  this->zero_init();
+  this->DepositParticle(dim/2-1,dim/2-1,false);
+  this->DepositParticle(dim/2-1,dim/2,false);
+  this->DepositParticle(dim/2,dim/2-1,false);
+  this->DepositParticle(dim/2,dim/2,false);
+
+  double *dda_weights = new double[2];
+  dda_weights[0] = 4*Gamma*neighbor_classes[0].size();
+  dda_weights[1] = dim*dim;
+
+  while (particles.size() <= dim*dim*thetalim) {
+    dda_weights[0] = 4*Gamma*neighbor_classes[0].size();
+    double PCprime = dda_weights[0]+dda_weights[1];
+    auto w = distr(engine)*PCprime;
+    if (w<=dda_weights[0]) {
+      this->MoveRandomParticleofClass(0);
+    } else {
+      this->DepositParticle(0,0,true);
+    }
+  }
 }
