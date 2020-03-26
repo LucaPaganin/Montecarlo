@@ -15,6 +15,7 @@ public:
   GrowingLattice(int dim, unsigned seed): Lattice(dim,seed),flux(1./60),T(200.0),thetalim(0.1) {;}
 
   double getGamma() const{return Gamma;}
+  void setGamma(double gamma) {Gamma=gamma;}
 
   const std::vector<std::array <int,2>>& get_Particles() const {return particles;}
   const std::array<std::vector<int>,5>& get_NeighborClasses() const {return neighbor_classes;}
