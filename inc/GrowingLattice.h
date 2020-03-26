@@ -14,6 +14,8 @@ public:
   GrowingLattice(): Lattice(),flux(1./60),T(100.0),thetalim(0.1) {;}
   GrowingLattice(int dim, unsigned seed): Lattice(dim,seed),flux(1./60),T(200.0),thetalim(0.1) {;}
 
+  double getGamma() const{return Gamma;}
+
   const std::vector<std::array <int,2>>& get_Particles() const {return particles;}
   const std::array<std::vector<int>,5>& get_NeighborClasses() const {return neighbor_classes;}
   const int get_NumParticles() const{return particles.size();}
@@ -33,11 +35,15 @@ public:
   void GrowLattice();
   void DDAGrowth();
 
+  void RemoveIsolatedParticles();
+  void ExploreIsland();
+  unsigned IslandCount();
+
 protected:
   std::vector<std::array <int,2>> particles;
   std::array<std::vector<int>,5> neighbor_classes;
   std::array<double,5> weights;
-  double flux, T, thetalim;
+  double flux, T, thetalim, Gamma;
 };
 
 

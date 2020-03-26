@@ -3,7 +3,7 @@
 
 void GrowingLattice::loadFromFile(const std::string& filename){
   std::ifstream file(filename.c_str());
-  file >> dim >> T >> flux >> thetalim;
+  file >> dim >> T >> flux >> thetalim >> Gamma;
   file.close();
   R = new int*[dim];
   for (size_t i = 0; i < dim; i++) R[i] = new int[dim];
@@ -143,7 +143,6 @@ void GrowingLattice::GrowLattice(){
 void GrowingLattice::DDAGrowth(){
   this->zero_init();
   for (unsigned i=0; i<2; i++) this->DepositParticle();
-  double Gamma = Constants::nu0*exp(-Constants::E0/(Constants::kB*T));
   double *dda_weights = new double[2];
   dda_weights[0] = 4*Gamma*neighbor_classes[0].size();
   dda_weights[1] = dim*dim;
@@ -158,4 +157,69 @@ void GrowingLattice::DDAGrowth(){
       this->DepositParticle();
     }
   }
+}
+
+void GrowingLattice::RemoveIsolatedParticles(){
+  for (auto p: neighbor_classes[0]){
+    R[particles[p-1][0]][particles[p-1][1]] = 0;
+  }
+  neighbor_classes[0].clear();
+}
+
+unsigned GrowingLattice::IslandCount(){
+  bool end=false;
+  unsigned n_islands=0;
+  while (!end) {
+    this->ExploreIsland();
+    n_islands++;
+
+    unsigned not_counted_particles=0;
+    for (size_t i = 0; i < dim; i++) {
+      for (size_t j = 0; j < dim; j++) {
+        if (R[i][j]!=0 && R[i][j]!=-1) {
+          not_counted_particles++;
+        }
+      }
+    }
+    if (not_counted_particles==0) end=true;
+  }
+  return n_islands;
+}
+
+void GrowingLattice::ExploreIsland(){
+  unsigned i=0,j=0;
+  for (i = 0; i < dim; i++) {
+    for (j = 0; j < dim; j++){
+      if (R[i][j]!=0 && R[i][j]!=-1){
+        goto stop;
+      }
+    }
+  }
+  stop:
+  auto first_particle = R[i][j];
+  std::vector<int> island;
+  island.push_back(first_particle);
+  R[i][j]=-1;
+  int d_islandsize=1;
+  while (d_islandsize>0) {
+    /*
+    std::cout << "Isola: ";
+    std::for_each(island.begin(), island.end(), [](auto x){std::cout << x << " ";});
+    std::cout << std::endl;
+    */
+    auto oldsize = island.size();
+    for (unsigned k=0; k<oldsize; k++){
+      auto p = island[k];
+      auto neighs = this->get_NearestNeighbors(particles[p-1][0], particles[p-1][1]);
+      for (auto n: neighs){
+        if (n>0){
+          island.push_back(n);
+          R[particles[n-1][0]][particles[n-1][1]]=-1;
+        }
+      }
+    }
+    auto newsize = island.size();
+    d_islandsize = newsize-oldsize;
+  }
+
 }
