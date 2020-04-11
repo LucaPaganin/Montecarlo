@@ -12,8 +12,8 @@ void GrowingLattice::loadFromFile(const std::string& filename){
 void GrowingLattice::DepositParticle(int x, int y, bool is_random){
   int i=x,j=y;
   if (is_random){
-    int i = distr(engine)*dim;
-    int j = distr(engine)*dim;
+    i = distr(engine)*dim;
+    j = distr(engine)*dim;
     while (R[i][j]!=0) {
       i = distr(engine)*dim;
       j = distr(engine)*dim;
@@ -125,7 +125,7 @@ void GrowingLattice::MoveRandomParticleofClass(unsigned q){
   auto p = neighbor_classes[q][ip];
   //std::cout << ip << " " << neighbor_classes[q].size() << std::endl;
   unsigned dir = std::floor(distr(engine)*4);
-  if (!this->IsThere_aNeighbor(particles[p-1][0], particles[p-1][1], dir)){
+  if (!(this->IsThere_aNeighbor(particles[p-1][0], particles[p-1][1], dir))){
     this->MoveParticle(p, dir);
   }
 }
@@ -133,8 +133,11 @@ void GrowingLattice::MoveRandomParticleofClass(unsigned q){
 void GrowingLattice::GrowLattice(){
   this->zero_init();
   for (unsigned i=0; i<2; i++) this->DepositParticle(0,0,true);
-  while(particles.size()<=thetalim*dim*dim){
+  while(particles.size() <= thetalim*dim*dim){
     this->ComputeWeights();
+    //std::for_each(weights.cbegin(), weights.cend(), [](auto x){std::cout << x << " ";});
+    //std::cout << std::endl;
+    //std::cout << *this << std::endl;
     auto q = this->get_RandomClassIndex();
     if (q==4) {
       this->DepositParticle(0,0,true);
