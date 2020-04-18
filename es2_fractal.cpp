@@ -17,5 +17,11 @@ int main(int argc, char const *argv[]) {
   gl.Fractal_Growth();
   gl.PrintLatticeToFile("output2/fractal.txt");
 
+  auto data = gl.countAtomsInCircles(0.8);
+  std::ofstream ofile("output2/n_vs_r.txt");
+  for (const auto& arr: data){
+    ofile << arr[0] << " " << arr[1] << std::endl;
+  }
+  ofile.close();
   return 0;
 }

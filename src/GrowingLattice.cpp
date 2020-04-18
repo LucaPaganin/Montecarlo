@@ -247,3 +247,24 @@ void GrowingLattice::Fractal_Growth(){
     }
   }
 }
+
+std::vector<std::array<int,2> > GrowingLattice::countAtomsInCircles(double fraction){
+  std::vector<std::array<int,2> > data;
+  int upperLimit = (fraction/2) * dim;
+
+  for (int r = 2; r < upperLimit; r++) {
+    int enclosed_atoms = 0;
+    for (int i = 0; i < dim; i++) {
+      for (int j = 0; j < dim; j++) {
+        if ( (i-dim/2)*(i-dim/2) + (j-dim/2)*(j-dim/2) <= r*r ) {
+          if (R[i][j] > 0) {
+            R[i][j] = -1;
+            enclosed_atoms++;
+          }
+        }
+      }
+    }
+    data.push_back(std::array<int,2>{r,enclosed_atoms});
+  }
+  return data;
+}

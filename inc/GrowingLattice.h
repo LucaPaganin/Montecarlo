@@ -40,6 +40,7 @@ public:
   void RemoveIsolatedParticles();
   void ExploreIsland();
   unsigned IslandCount();
+  std::vector<std::array<int,2> > countAtomsInCircles(double);
 
 protected:
   std::vector<std::array <int,2>> particles;
